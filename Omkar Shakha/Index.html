@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities Info</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            background-color: lightgray;
+            border-radius: 5px;
+        }
+        .tab.active {
+            background-color: dodgerblue;
+            color: white;
+        }
+        .content {
+            display: none;
+        }
+        .content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Welcome to Omkar Shakha Information Page</h2>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('upcoming')">Upcoming Activities</div>
+        <div class="tab" onclick="showTab('ongoing')">Ongoing Activities</div>
+        <div class="tab" onclick="showTab('other')">Other Info</div>
+    </div>
+
+    <div id="upcoming" class="content active">
+        <h3>Upcoming Activities</h3>
+        <p>Stay tuned for our upcoming events!</p>
+    </div>
+
+    <div id="ongoing" class="content">
+        <h3>Ongoing Activities</h3>
+        <p>Currently happening: Weekly Coding Challenge.</p>
+    </div>
+
+    <div id="other" class="content">
+        <h3>Other Info</h3>
+        <p>For more details, contact us at info@example.com.</p>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+
+</body>
+</html>
