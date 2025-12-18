@@ -57,11 +57,23 @@ async function loadSheetData() {
         for (let i = 1; i < rows.length; i++) {
             if (rows[i].length < 2) continue;
             const tr = document.createElement('tr');
-            rows[i].forEach(cell => {
-                const td = document.createElement('td');
-                td.textContent = cell.replace(/"/g, "");
-                tr.appendChild(td);
-            });
+            rows[i].forEach(cellText => {
+			const td = document.createElement('td');
+    
+			// 1. Clean up the text (remove leading/trailing quotes often added by CSVs)
+			let cleanText = cellText.trim().replace(/^"|"$/g, '');
+
+			// 2. Check if the text contains an HTML link tag
+			if (cleanText.toLowerCase().includes('<a href=')) {
+				// Use innerHTML to render the code as a real clickable link
+				td.innerHTML = cleanText;
+			} else {
+				// Use textContent for normal text to keep it simple and safe
+					td.textContent = cleanText;
+		}
+    
+    tr.appendChild(td);
+});
             tableBody.appendChild(tr);
         }
     } catch (err) {
