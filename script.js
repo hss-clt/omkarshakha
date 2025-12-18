@@ -29,57 +29,45 @@ document.getElementById('footer-placeholder').innerHTML = footerContent;
 
 const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQfh8WhlDiSdrW5m0zyeh3ClHM8O6PUiwjpPGO-4BvGjhntZYDzcp6lLJ4cnpK5v4nbXuZkbE3mXXTY/pub?output=csv';
 
+// Replace with your actual Spreadsheet ID (the long string in your URL)
+const SPREADSHEET_ID = '1TQ43EAPutGvl75KovXx0wOtN979JDfAj_KBMIxxNeLQ';
+
 async function loadSheetData() {
+    const table = document.getElementById('data-table');
+    const gid = table.getAttribute('data-gid'); // Detects the GID from HTML
+    
+    // Construct the specific CSV URL for that tab
+    const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=${gid}`;
+
     try {
-        const response = await fetch(sheetUrl);
+        const response = await fetch(url);
         const data = await response.text();
-        
-        // Split data into rows and cells
         const rows = data.split('\n').map(row => row.split(','));
-        
+
         const headerRow = document.getElementById('table-header');
         const tableBody = document.getElementById('table-body');
 
-        // 1. Clear existing content
-        headerRow.innerHTML = '';
-        tableBody.innerHTML = '';
-
-        // 2. Create Headers (from the first row of the sheet)
-        rows[0].forEach(columnText => {
+        // Render Headers
+        rows[0].forEach(text => {
             const th = document.createElement('th');
-            th.textContent = columnText;
+            th.textContent = text.replace(/"/g, ""); // Removes extra quotes
             headerRow.appendChild(th);
         });
 
-        // 3. Create Data Rows
+        // Render Rows
         for (let i = 1; i < rows.length; i++) {
-            if (rows[i].length < 2) continue; // Skip empty rows
-            
+            if (rows[i].length < 2) continue;
             const tr = document.createElement('tr');
-			rows[i].forEach(cellText => {
-			const td = document.createElement('td');
-			
-			// 1. Clean up the text (remove leading/trailing quotes often added by CSVs)
-			let cleanText = cellText.trim().replace(/^"|"$/g, '');
-
-			// 2. Check if the text contains an HTML link tag
-			if (cleanText.toLowerCase().includes('<a href=')) {
-				// Use innerHTML to render the code as a real clickable link
-				td.innerHTML = cleanText;
-			} else {
-				// Use textContent for normal text to keep it simple and safe
-				td.textContent = cleanText;
-			}
-			
-			tr.appendChild(td);
-		});
-			
+            rows[i].forEach(cell => {
+                const td = document.createElement('td');
+                td.textContent = cell.replace(/"/g, "");
+                tr.appendChild(td);
+            });
             tableBody.appendChild(tr);
         }
-    } catch (error) {
-        console.error('Error fetching sheet data:', error);
+    } catch (err) {
+        console.error("Error loading data:", err);
     }
 }
 
-// Initialize the function
 loadSheetData();
