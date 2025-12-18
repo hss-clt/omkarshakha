@@ -56,11 +56,24 @@ async function loadSheetData() {
             if (rows[i].length < 2) continue; // Skip empty rows
             
             const tr = document.createElement('tr');
-            rows[i].forEach(cellText => {
-                const td = document.createElement('td');
-                td.textContent = cellText;
-                tr.appendChild(td);
-            });
+			rows[i].forEach(cellText => {
+    const td = document.createElement('td');
+    const cleanText = cellText.replace(/"/g, "").trim(); // Remove quotes and extra spaces
+
+    // Check if the text is a URL
+    if (cleanText.startsWith('http')) {
+        const link = document.createElement('a');
+        link.href = cleanText;
+        link.textContent = "View Link"; // Or use cleanText to show the URL
+        link.target = "_blank";         // Opens in a new tab
+        td.appendChild(link);
+    } else {
+        td.textContent = cleanText;
+    }
+    
+    tr.appendChild(td);
+	});
+
             tableBody.appendChild(tr);
         }
     } catch (error) {
