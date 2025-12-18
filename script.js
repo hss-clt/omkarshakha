@@ -26,69 +26,73 @@ const footerContent = `
 document.getElementById('header-placeholder').innerHTML = headerContent;
 document.getElementById('footer-placeholder').innerHTML = footerContent;
 
-
-
-// Replace with your actual Spreadsheet ID (the long string in your URL)
+// Google Sheets Config
 const SPREADSHEET_ID = '1TQ43EAPutGvl75KovXx0wOtN979JDfAj_KBMIxxNeLQ';
 
 async function loadSheetData() {
     const table = document.getElementById('data-table');
-    const gid = table.getAttribute('data-gid'); // Detects the GID from HTML
-    
-    // Construct the specific CSV URL for that tab
-const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=${gid}`;
-    
+    if (!table) return;
+
+    const gid = table.getAttribute('data-gid'); 
+    const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=${gid}`;
+
     try {
         const response = await fetch(url);
-        const csvText = await response.text();
+        const csvData = await response.text();
 
-        // PapaParse automatically handles commas inside quotes and removes the quotes for you
-        const results = Papa.parse(csvText, {
-            header: false, // Set to true if you want objects instead of arrays
-            skipEmptyLines: true
+        // Safety Check: If Google returns HTML instead of CSV (due to sharing permissions)
+        if (csvData.includes('<!DOCTYPE html>')) {
+            console.error("Access Denied: Check Google Sheet sharing settings.");
+            return;
+        }
+
+        // --- THE FIX FOR COMMAS ---
+        // This splits the CSV by lines, then splits each line by commas NOT inside quotes
+        const rows = csvData.split(/\r?\n/).map(row => {
+            // Regex: match commas only if they are not followed by an odd number of quotes
+            return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
         });
-
-        const rows = results.data; // This is now a clean array of arrays
-        
-        // ... proceed with your table rendering logic using rows ...
-    } catch (err) {
-        console.error(err);
-    }
-
 
         const headerRow = document.getElementById('table-header');
         const tableBody = document.getElementById('table-body');
 
-        // Render Headers
-        rows[0].forEach(text => {
-            const th = document.createElement('th');
-            th.textContent = text.replace(/"/g, ""); // Removes extra quotes
-            headerRow.appendChild(th);
-        });
+        // Clear existing content
+        headerRow.innerHTML = '';
+        tableBody.innerHTML = '';
 
-        // Render Rows
+        // Render Headers (First Row)
+        if (rows.length > 0) {
+            rows[0].forEach(text => {
+                const th = document.createElement('th');
+                th.textContent = text.replace(/^"|"$/g, "").trim(); 
+                headerRow.appendChild(th);
+            });
+        }
+
+        // Render Data Rows
         for (let i = 1; i < rows.length; i++) {
-            if (rows[i].length < 2) continue;
+            if (rows[i].length < 2) continue; // Skip empty rows
+            
             const tr = document.createElement('tr');
             rows[i].forEach(cellText => {
-			const td = document.createElement('td');
-    
-			// 1. Clean up the text (remove leading/trailing quotes often added by CSVs)
-			let cleanText = cellText.trim().replace(/^"|"$/g, '');
+                const td = document.createElement('td');
+                
+                // Remove surrounding quotes from the CSV field
+                let cleanText = cellText.trim().replace(/^"|"$/g, '');
 
-			// 2. Check if the text contains an HTML link tag
-			if (cleanText.toLowerCase().includes('<a href=')) {
-				// Use innerHTML to render the code as a real clickable link
-				td.innerHTML = cleanText;
-			} else {
-				// Use textContent for normal text to keep it simple and safe
-				td.textContent = cleanText;
-		}
-    
-    tr.appendChild(td);
-});
+                // Check if the text contains an HTML link tag
+                if (cleanText.toLowerCase().includes('<a href=')) {
+                    td.innerHTML = cleanText; 
+                } else {
+                    td.textContent = cleanText;
+                }
+                tr.appendChild(td);
+            });
             tableBody.appendChild(tr);
         }
+    } catch (err) {
+        console.error("Error loading data:", err);
+    }
 }
 
 loadSheetData();
