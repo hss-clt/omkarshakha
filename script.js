@@ -1,12 +1,20 @@
 // Function to provide a set of WhatsApp-style colors
-function getRandomColor() {
-    const colors = [
-        '#075e54', '#128c7e', '#34b7f1', '#25d366', 
-        '#3e6184', '#8e44ad', '#c0392b', '#d35400', 
-        '#2c3e50', '#2980b9'
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
+const userColors = {}; // Stores name-to-color mapping
+
+function getColorForUser(name) {
+    const palette = ['#075e54', '#128c7e', '#34b7f1', '#25d366', '#3e6184', '#8e44ad', '#c0392b', '#d35400'];
+    
+    if (!userColors[name]) {
+        // Assign a color from the palette based on the number of users already found
+        const index = Object.keys(userColors).length % palette.length;
+        userColors[name] = palette[index];
+    }
+    return userColors[name];
 }
+
+<div class="whatsapp-header" style="background-color: ${getColorForUser(col5)};">
+    ${col5}
+</div>
 
 // Google Sheets Config
 const SPREADSHEET_ID = '1TQ43EAPutGvl75KovXx0wOtN979JDfAj_KBMIxxNeLQ';
