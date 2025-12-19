@@ -42,6 +42,25 @@ function getPersistentColor(name) {
 // Google Sheets Config
 const SPREADSHEET_ID = '1TQ43EAPutGvl75KovXx0wOtN979JDfAj_KBMIxxNeLQ';
 
+// Helper to render columns 2, 3, and 4 inside the bubble
+function renderRemainingColumns(rowArray) {
+    let html = '';
+    // Loop through indices 1, 2, and 3
+    for (let j = 1; j <= 3; j++) {
+        if (rowArray[j]) {
+            let text = rowArray[j].trim().replace(/^"|"$/g, '');
+            
+            // If the text looks like an HTML link, render as HTML, else as text
+            if (text.toLowerCase().includes('<a href=')) {
+                html += `<div class="col-data">${text}</div>`;
+            } else if (text !== "") {
+                html += `<div class="col-data">${text}</div>`;
+            }
+        }
+    }
+    return html;
+}
+
 async function loadSheetData() {
     const table = document.getElementById('data-table');
     if (!table) return;
@@ -114,23 +133,6 @@ async function loadSheetData() {
     }
 }
 
-// Helper to render columns 2, 3, and 4 inside the bubble
-function renderRemainingColumns(rowArray) {
-    let html = '';
-    // Loop through indices 1, 2, and 3
-    for (let j = 1; j <= 3; j++) {
-        if (rowArray[j]) {
-            let text = rowArray[j].trim().replace(/^"|"$/g, '');
-            
-            // If the text looks like an HTML link, render as HTML, else as text
-            if (text.toLowerCase().includes('<a href=')) {
-                html += `<div class="col-data">${text}</div>`;
-            } else if (text !== "") {
-                html += `<div class="col-data">${text}</div>`;
-            }
-        }
-    }
-    return html;
-}
+
 
 loadSheetData();
