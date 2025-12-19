@@ -16,8 +16,8 @@ const footerContent = `
     <footer>
         <div class="footer-info">
             <p>Contact us: <a href="tel:+19803692983,1">+1 (980) 369-2983 ext:1</a>
-            Follow us: <a href="https://www.facebook.com/cltomkar/" target="_blank">Facebook</a> <BR>
-            &copy; 2025 Omkar Shakha All rights reserved.</p>
+            Follow us: <a href="https://www.facebook.com/cltomkar/" target="_blank">Facebook</a> </p>
+            <p>&copy; 2025 Omkar Shakha All rights reserved.</p>
         </div>
     </footer>
 `;
