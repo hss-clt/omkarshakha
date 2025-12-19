@@ -56,6 +56,16 @@ function renderRemainingColumns(rowArray) {
             } else if (text !== "") {
                 html += `<div class="col-data">${text}</div>`;
             }
+			
+			if (text !== "") {
+                // Check if this is Column 4 (index 3)
+                if (j === 3) {
+                    html += `<div class="col-when"><strong>When:</strong> ${text}</div>`;
+                } else {
+                    // Standard display for Columns 2 and 3
+                    html += `<div class="col-data">${text}</div>`;
+                }
+            }
         }
     }
     return html;
