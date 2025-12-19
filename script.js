@@ -54,11 +54,7 @@ function renderRemainingColumns(rowArray) {
             if (text.toLowerCase().includes('<a href=')) {
                 html += `<div class="col-data">${text}</div>`;
             } else if (text !== "") {
-                html += `<div class="col-data">${text}</div>`;
-            }
-			
-			if (text !== "") {
-                // Check if this is Column 4 (index 3)
+                 // Check if this is Column 4 (index 3)
                 if (j === 3) {
                     html += `<div class="col-when"><strong>When:</strong> ${text}</div>`;
                 } else {

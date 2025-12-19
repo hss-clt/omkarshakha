@@ -51,7 +51,7 @@ main {
     max-width: 600px;
     margin: 20px auto;
     border-collapse: separate;
-    border-spacing: 0 18px;
+    border-spacing: 0 30px;
 	border: none;
 }
 
@@ -140,6 +140,15 @@ main {
     font-size: 0.95rem; 
     line-height: 1.4; 
     color: #4a4a4a; 
+}
+
+/* 3. Pre-styling for Column 4 text */
+.col-when {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 5px;
+    font-style: italic;
+    display: block;
 }
 
 /* Footer Styling */
