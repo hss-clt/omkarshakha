@@ -1,4 +1,4 @@
-/* General Layout */
+/* --- 1. Global Layout Fixes --- */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
@@ -8,162 +8,55 @@ body {
     background-color: #f9f9f9;
 }
 
-/* Header & Menu */
-header {
-    background-color: #2c3e50;
-    padding: 1rem 0;
-    text-align: center;
-}
-
-header a {
-    color: white;
-    text-decoration: none;
-    margin: 0 15px;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 14px;
-}
-
-header a:hover {
-    color: #3498db;
-}
-
-/* Main Content Area */
 main {
     flex: 1;
-    padding: 40px 20px;
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-h1 { color: #2c3e50; }
-p { line-height: 1.6; color: #444; font-size: 1.1rem; }
-
-/* Final Footer Fix */
-footer {
-    background-color: #ff8c00 !important; /* Bright Orange */
-    color: #ffffff !important;           /* Force White Text */
-    text-align: center;
-    padding: 10px 0;
-    margin-top: auto;
-    display: block;                      /* Ensures the footer box actually renders */
+    padding: 20px;
+    background-color: #e5ddd5; /* WhatsApp Chat Background */
+    background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+    background-attachment: fixed;
     width: 100%;
+    box-sizing: border-box;
 }
 
-.footer-info {
-    margin: 2px 0;
-    font-size: 0.85rem;
-    color: #ffffff !important;           /* Ensures text is white */
-}
-
-footer a {
-    color: #ffffff !important;
-    text-decoration: underline;
-}
-
-/* Table Layout */
-.custom-table {
-    width: 100%;
-    border-collapse: collapse; /* Prevents double borders */
-    margin: 25px 0;
-    font-size: 0.9rem;
-    min-width: 400px;
-    border-radius: 5px 5px 0 0;
-    overflow: hidden; /* Makes rounded corners visible */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-}
-
-/* Header Styling */
-.custom-table thead tr {
-    background-color: #2c3e50; /* Matches your header color */
-    color: #ffffff;
-    text-align: left;
-    font-weight: bold;
-}
-
-/* Style the links inside your table cells */
-.custom-table td a {
-    color: #3498db;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.custom-table td a:hover {
-    text-decoration: underline;
-    color: #e67e22; /* Changes to orange on hover to match your footer */
-}
-
-/* Cell Padding */
-.custom-table th,
-.custom-table td {
-    padding: 12px 15px;
-}
-
-/* Zebra Striping (Alternating Rows) */
-.custom-table tbody tr {
-    border-bottom: 1px solid #dddddd;
-}
-
-.custom-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
-}
-
-/* Last Row Border */
-.custom-table tbody tr:last-of-type {
-    border-bottom: 2px solid #2c3e50;
-}
-
-/* Hover effect for rows */
-.custom-table tbody tr:hover {
-    background-color: #f1f1f1;
-    cursor: pointer;
-}
-/* 1. Reset Table for Chat Look */
+/* --- 2. Chat Table Reset --- */
 #data-table {
     width: 100%;
-    max-width: 600px; /* Adjusted for better mobile/desktop balance */
+    max-width: 600px;
     margin: 0 auto;
     border-collapse: separate;
     border-spacing: 0 12px;
-    border: none; /* Removes standard table borders */
 }
 
-/* 2. General Row Setup */
 #table-body tr {
     display: flex;
     width: 100%;
-    margin-bottom: 10px;
-    background-color: transparent !important; /* Prevents zebra striping from showing */
+    background-color: transparent !important; /* Forces out zebra striping */
     border: none !important;
 }
 
-/* 1. Standardize Table Cells as Bubbles */
 #table-body td {
-    display: inline-block; /* Bubble shrinks to fit text */
+    display: inline-block;
     position: relative;
-    padding: 10px 15px;    /* Equal padding for both */
-    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
-    max-width: 75%;        /* Leave room on the opposite side */
+    padding: 10px 15px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+    max-width: 75%;
     border: none !important;
     word-wrap: break-word;
 }
 
-/* 2. LEFT ALIGNED (Odd Rows - White) */
+/* --- 3. Left Aligned (White Rows) --- */
 #table-body tr:nth-child(odd) {
-    display: flex;
-    justify-content: flex-start; /* Push to left */
-    background: transparent !important;
+    justify-content: flex-start;
 }
 
 #table-body tr:nth-child(odd) td {
     background-color: #ffffff !important;
     border-radius: 0 15px 15px 15px;
-    text-align: left; /* Text to the left */
+    text-align: left;
     margin-left: 10px;
 }
 
-/* White Tail pointing Left */
+/* Left Bubble Tail */
 #table-body tr:nth-child(odd) td::after {
     content: "";
     position: absolute;
@@ -175,21 +68,19 @@ footer a {
     border-right: 15px solid #ffffff;
 }
 
-/* 3. RIGHT ALIGNED (Even Rows - Green) */
+/* --- 4. Right Aligned (Green Rows) --- */
 #table-body tr:nth-child(even) {
-    display: flex;
-    justify-content: flex-end; /* Push to right */
-    background: transparent !important;
+    justify-content: flex-end;
 }
 
 #table-body tr:nth-child(even) td {
-    background-color: #dcf8c6 !important;
+    background-color: #dcf8c6 !important; /* WhatsApp Green */
     border-radius: 15px 0 15px 15px;
-    text-align: right; /* Text to the right */
+    text-align: right;
     margin-right: 10px;
 }
 
-/* Green Tail pointing Right */
+/* Right Bubble Tail */
 #table-body tr:nth-child(even) td::after {
     content: "";
     position: absolute;
@@ -201,20 +92,33 @@ footer a {
     border-left: 15px solid #dcf8c6;
 }
 
-/* 4. Column Alignment inside Bubbles */
-#table-body tr:nth-child(odd) .whatsapp-header,
-#table-body tr:nth-child(odd) .col-bold,
-#table-body tr:nth-child(odd) .col-data {
-    text-align: left;
+/* --- 5. Content Styling --- */
+.whatsapp-header { 
+    font-size: 0.85rem; 
+    font-weight: bold; 
+    margin-bottom: 2px; 
+    display: block; 
 }
 
-#table-body tr:nth-child(even) .whatsapp-header,
-#table-body tr:nth-child(even) .col-bold,
-#table-body tr:nth-child(even) .col-data {
-    text-align: right;
+.col-bold { 
+    font-weight: bold; 
+    font-size: 1rem; 
+    color: #000; 
+    display: block; 
+    margin: 4px 0; 
 }
 
-/* 5. Typography */
-.whatsapp-header { font-size: 0.85rem; font-weight: bold; margin-bottom: 2px; }
-.col-bold { font-weight: bold; font-size: 1rem; color: #000; display: block; }
-.col-data { font-size: 0.95rem; line-height: 1.4; color: #4a4a4a; }
+.col-data { 
+    font-size: 0.95rem; 
+    line-height: 1.4; 
+    color: #4a4a4a; 
+}
+
+/* Footer Styling */
+footer {
+    background-color: #ff8c00 !important;
+    color: #ffffff !important;
+    text-align: center;
+    padding: 15px 0;
+    width: 100%;
+}
