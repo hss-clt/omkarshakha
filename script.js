@@ -26,6 +26,19 @@ const footerContent = `
 document.getElementById('header-placeholder').innerHTML = headerContent;
 document.getElementById('footer-placeholder').innerHTML = footerContent;
 
+// Color Palette for Senders
+const colorMap = {};
+const palette = ['#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#009688', '#4caf50', '#ff9800'];
+
+function getPersistentColor(name) {
+    if (!colorMap[name]) {
+        // Assign next available color from palette
+        const index = Object.keys(colorMap).length % palette.length;
+        colorMap[name] = palette[index];
+    }
+    return colorMap[name];
+}
+
 // Google Sheets Config
 const SPREADSHEET_ID = '1TQ43EAPutGvl75KovXx0wOtN979JDfAj_KBMIxxNeLQ';
 
@@ -69,27 +82,32 @@ async function loadSheetData() {
             });
         }
 
-        // Render Data Rows
-        for (let i = 1; i < rows.length; i++) {
-            if (rows[i].length < 2) continue; // Skip empty rows
-            
-            const tr = document.createElement('tr');
-            rows[i].forEach(cellText => {
-                const td = document.createElement('td');
-                
-                // Remove surrounding quotes from the CSV field
-                let cleanText = cellText.trim().replace(/^"|"$/g, '');
+        // Inside your loadSheetData loop:
+		for (let i = 1; i < rows.length; i++) {
+			if (rows[i].length < 5) continue; 
 
-                // Check if the text contains an HTML link tag
-                if (cleanText.toLowerCase().includes('<a href=')) {
-                    td.innerHTML = cleanText; 
-                } else {
-                    td.textContent = cleanText;
-                }
-                tr.appendChild(td);
-            });
-            tableBody.appendChild(tr);
-        }
+			const col1 = rows[i][0].replace(/^"|"$/g, '').trim(); // Primary text
+			const col5 = rows[i][4].replace(/^"|"$/g, '').trim(); // Sender Name
+			
+			const tr = document.createElement('tr');
+			const td = document.createElement('td');
+
+			const senderColor = getPersistentColor(col5);
+
+			// Build the WhatsApp bubble structure
+			td.innerHTML = `
+				<span class="whatsapp-header" style="color: ${senderColor};">
+					${col5}
+				</span>
+				<div class="message-bubble">
+					<span class="col-bold">${col1}</span>
+					<div class="message-content">${renderRemainingColumns(rows[i])}</div>
+				</div>
+			`;
+			
+			tr.appendChild(td);
+			tableBody.appendChild(tr);
+		}
     } catch (err) {
         console.error("Error loading data:", err);
     }
