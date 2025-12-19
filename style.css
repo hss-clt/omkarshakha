@@ -17,92 +17,83 @@
     border: none !important;
 }
 
-/* 3. Base Cell (The "Bubble" Container) */
+/* 1. Standardize Table Cells as Bubbles */
 #table-body td {
-    display: block;
+    display: inline-block; /* Bubble shrinks to fit text */
     position: relative;
-    padding: 8px 12px;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.15);
-    max-width: 85%;
+    padding: 10px 15px;    /* Equal padding for both */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    max-width: 75%;        /* Leave room on the opposite side */
     border: none !important;
+    word-wrap: break-word;
 }
 
-/* 4. LEFT ALIGNED (Odd Rows) - White Bubble */
+/* 2. LEFT ALIGNED (Odd Rows - White) */
 #table-body tr:nth-child(odd) {
-    justify-content: flex-start;
+    display: flex;
+    justify-content: flex-start; /* Push to left */
+    background: transparent !important;
 }
 
 #table-body tr:nth-child(odd) td {
     background-color: #ffffff !important;
     border-radius: 0 15px 15px 15px;
-    margin-right: 40px;
+    text-align: left; /* Text to the left */
+    margin-left: 10px;
 }
 
-/* Left Tail - Points to the Left */
+/* White Tail pointing Left */
 #table-body tr:nth-child(odd) td::after {
     content: "";
     position: absolute;
     top: 0;
-    left: -10px;
+    left: -12px;
     width: 0;
     height: 0;
     border-bottom: 15px solid transparent;
     border-right: 15px solid #ffffff;
 }
 
-/* 5. RIGHT ALIGNED (Even Rows) - Green Bubble */
+/* 3. RIGHT ALIGNED (Even Rows - Green) */
 #table-body tr:nth-child(even) {
-    justify-content: flex-end; /* Pushes bubble to the right */
+    display: flex;
+    justify-content: flex-end; /* Push to right */
+    background: transparent !important;
 }
 
 #table-body tr:nth-child(even) td {
-    background-color: #dcf8c6 !important; /* WhatsApp Light Green */
+    background-color: #dcf8c6 !important;
     border-radius: 15px 0 15px 15px;
-    margin-left: 40px;
+    text-align: right; /* Text to the right */
+    margin-right: 10px;
 }
 
-/* Right Tail - Points to the Right */
+/* Green Tail pointing Right */
 #table-body tr:nth-child(even) td::after {
     content: "";
     position: absolute;
     top: 0;
-    right: -10px;
+    right: -12px;
     width: 0;
     height: 0;
     border-bottom: 15px solid transparent;
     border-left: 15px solid #dcf8c6;
 }
 
-/* 6. Text Alignment within Bubbles */
+/* 4. Column Alignment inside Bubbles */
+#table-body tr:nth-child(odd) .whatsapp-header,
 #table-body tr:nth-child(odd) .col-bold,
 #table-body tr:nth-child(odd) .col-data {
     text-align: left;
 }
 
+#table-body tr:nth-child(even) .whatsapp-header,
 #table-body tr:nth-child(even) .col-bold,
 #table-body tr:nth-child(even) .col-data {
     text-align: right;
 }
 
-/* 7. Typography Styles */
-.whatsapp-header { 
-    font-weight: bold; 
-    font-size: 0.85rem; 
-    display: block; 
-    margin-bottom: 2px;
-}
-
-.col-bold { 
-    font-weight: bold; 
-    display: block; 
-    margin: 4px 0; 
-    font-size: 1rem; 
-    color: #000;
-}
-
-.col-data { 
-    font-size: 0.95rem; 
-    color: #4a4a4a; 
-    margin-bottom: 2px;
-    line-height: 1.4;
-}
+/* 5. Typography */
+.whatsapp-header { font-size: 0.85rem; font-weight: bold; margin-bottom: 2px; }
+.col-bold { font-weight: bold; font-size: 1rem; color: #000; display: block; }
+.col-data { font-size: 0.95rem; line-height: 1.4; color: #4a4a4a; }
