@@ -26,24 +26,6 @@ const footerContent = `
 document.getElementById('header-placeholder').innerHTML = headerContent;
 document.getElementById('footer-placeholder').innerHTML = footerContent;
 
-// Store assigned colors so the same person always has the same color
-const colorMap = {};
-const palette = ['#075e54', '#128c7e', '#34b7f1', '#25d366', '#3e6184', '#8e44ad', '#c0392b', '#d35400'];
-
-function getColorForUser(name) {
-    if (!colorMap[name]) {
-        // Assign next color in palette
-        const index = Object.keys(colorMap).length % palette.length;
-        colorMap[name] = palette[index];
-    }
-    return colorMap[name];
-}
-
-
-<div class="whatsapp-header" style="background-color: ${getColorForUser(col5)};">
-    ${col5}
-</div>
-
 // Google Sheets Config
 const SPREADSHEET_ID = '1TQ43EAPutGvl75KovXx0wOtN979JDfAj_KBMIxxNeLQ';
 
@@ -57,60 +39,60 @@ async function loadSheetData() {
     try {
         const response = await fetch(url);
         const csvData = await response.text();
-        
-        // Handle CSV split (ignoring commas inside quotes)
+
+        // Safety Check: If Google returns HTML instead of CSV (due to sharing permissions)
+        if (csvData.includes('<!DOCTYPE html>')) {
+            console.error("Access Denied: Check Google Sheet sharing settings.");
+            return;
+        }
+
+        // --- THE FIX FOR COMMAS ---
+        // This splits the CSV by lines, then splits each line by commas NOT inside quotes
         const rows = csvData.split(/\r?\n/).map(row => {
+            // Regex: match commas only if they are not followed by an odd number of quotes
             return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
         });
 
+        const headerRow = document.getElementById('table-header');
         const tableBody = document.getElementById('table-body');
+
+        // Clear existing content
+        headerRow.innerHTML = '';
         tableBody.innerHTML = '';
 
-        // Inside your loadSheetData loop:
-	for (let i = 1; i < rows.length; i++) {
-    if (rows[i].length < 5) continue; 
+        // Render Headers (First Row)
+        if (rows.length > 0) {
+            rows[0].forEach(text => {
+                const th = document.createElement('th');
+                th.textContent = text.replace(/^"|"$/g, "").trim(); 
+                headerRow.appendChild(th);
+            });
+        }
 
-    const col1 = rows[i][0].replace(/^"|"$/g, '').trim(); 
-    const col5 = rows[i][4].replace(/^"|"$/g, '').trim(); 
-    
-    const tr = document.createElement('tr');
-    const td = document.createElement('td');
+        // Render Data Rows
+        for (let i = 1; i < rows.length; i++) {
+            if (rows[i].length < 2) continue; // Skip empty rows
+            
+            const tr = document.createElement('tr');
+            rows[i].forEach(cellText => {
+                const td = document.createElement('td');
+                
+                // Remove surrounding quotes from the CSV field
+                let cleanText = cellText.trim().replace(/^"|"$/g, '');
 
-    const userColor = getColorForUser(col5);
-
-    td.innerHTML = `
-        <div class="whatsapp-header" style="background-color: ${userColor};">
-            ${col5}
-        </div>
-        <div class="message-bubble">
-            <span class="col-bold">${col1}</span>
-            <div class="message-content">${renderRemainingColumns(rows[i])}</div>
-        </div>
-    `;
-    
-    tr.appendChild(td);
-    tableBody.appendChild(tr);
-}
+                // Check if the text contains an HTML link tag
+                if (cleanText.toLowerCase().includes('<a href=')) {
+                    td.innerHTML = cleanText; 
+                } else {
+                    td.textContent = cleanText;
+                }
+                tr.appendChild(td);
+            });
+            tableBody.appendChild(tr);
+        }
     } catch (err) {
         console.error("Error loading data:", err);
     }
-}
-
-function renderRemainingColumns(rowArray) {
-    let html = '';
-    // Process columns 2, 3, 4 (indices 1, 2, 3)
-    for (let j = 1; j <= 3; j++) {
-        if (rowArray[j]) {
-            let text = rowArray[j].trim().replace(/^"|"$/g, '');
-            // Check for hyperlinks
-            if (text.toLowerCase().includes('<a href=')) {
-                html += `<div class="col-data">${text}</div>`;
-            } else {
-                html += `<div class="col-data">${text}</div>`;
-            }
-        }
-    }
-    return html;
 }
 
 loadSheetData();
