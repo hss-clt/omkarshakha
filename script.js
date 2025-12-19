@@ -66,21 +66,22 @@ async function loadSheetData() {
             return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
         });
 
-        const headerRow = document.getElementById('table-header');
+        //const headerRow = document.getElementById('table-header');
         const tableBody = document.getElementById('table-body');
 
         // Clear existing content
-        headerRow.innerHTML = '';
+        //headerRow.innerHTML = '';
         tableBody.innerHTML = '';
 
         // Render Headers (First Row)
+		/*
         if (rows.length > 0) {
             rows[0].forEach(text => {
                 const th = document.createElement('th');
                 th.textContent = text.replace(/^"|"$/g, "").trim(); 
                 headerRow.appendChild(th);
             });
-        }
+        }*/
 
         // Inside your loadSheetData loop:
 		for (let i = 1; i < rows.length; i++) {
@@ -111,6 +112,25 @@ async function loadSheetData() {
     } catch (err) {
         console.error("Error loading data:", err);
     }
+}
+
+// Helper to render columns 2, 3, and 4 inside the bubble
+function renderRemainingColumns(rowArray) {
+    let html = '';
+    // Loop through indices 1, 2, and 3
+    for (let j = 1; j <= 3; j++) {
+        if (rowArray[j]) {
+            let text = rowArray[j].trim().replace(/^"|"$/g, '');
+            
+            // If the text looks like an HTML link, render as HTML, else as text
+            if (text.toLowerCase().includes('<a href=')) {
+                html += `<div class="col-data">${text}</div>`;
+            } else if (text !== "") {
+                html += `<div class="col-data">${text}</div>`;
+            }
+        }
+    }
+    return html;
 }
 
 loadSheetData();
